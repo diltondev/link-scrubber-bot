@@ -4,9 +4,8 @@
     "main": "index.js",
     "bin": "index.js",
     "scripts": {
-        "start": "NODE_ENV=production NODE_NO_WARNINGS=1 node . ",
-        "dev": "NODE_ENV=development NODE_NO_WARNINGS=1 nodemon .",
-        "build": "pkg ."
+        "start": "NODE_ENV=production NODE_NO_WARNINGS=1 node .",
+        "dev": "NODE_ENV=development NODE_NO_WARNINGS=1 nodemon ."
     },
     "author": "Dalton Harrold",
     "license": "ISC",
@@ -17,5 +16,8 @@
     },
     "devDependencies": {
         "nodemon": "^2.0.19"
+    },
+    "engines": {
+        "node": "20.x"
     }
 }
