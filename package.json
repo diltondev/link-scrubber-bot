@@ -4,12 +4,11 @@
     "main": "index.js",
     "bin": "index.js",
     "scripts": {
-        "start": "cross-env NODE_ENV=production NODE_NO_WARNINGS=1 node . ",
-        "dev": "cross-env NODE_ENV=development NODE_NO_WARNINGS=1 node .",
-        "dev:watch": "cross-env NODE_ENV=development NODE_NO_WARNINGS=1 nodemon .",
+        "start": "NODE_ENV=production NODE_NO_WARNINGS=1 node . ",
+        "dev": "NODE_ENV=development NODE_NO_WARNINGS=1 nodemon .",
         "build": "pkg ."
     },
-    "author": "Joaquin Giordano <joaquin_giordano@outlook.com>",
+    "author": "Dalton Harrold",
     "license": "ISC",
     "description": "",
     "dependencies": {
@@ -17,15 +16,6 @@
         "dotenv": "^16.0.2"
     },
     "devDependencies": {
-        "cross-env": "^7.0.3",
-        "nodemon": "^2.0.19",
-        "pkg": "^5.7.0"
-    },
-    "pkg": {
-        "outputPath": "dist",
-        "scripts": "commands/**/*.js",
-        "assets": [
-            ".env"
-        ]
+        "nodemon": "^2.0.19"
     }
 }

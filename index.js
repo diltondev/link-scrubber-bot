@@ -1,10 +1,11 @@
 const { REST } = require('@discordjs/rest')
 const { Client, GatewayIntentBits, Partials } = require('discord.js');
 const { Routes } = require('discord-api-types/v9')
-const client = new Client({ intents: [GatewayIntentBits.Guilds], partials: [Partials.Channel] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent], partials: [Partials.Channel] });
 
 const fs = require('fs')
-const path = require('path')
+const path = require('path');
+const exp = require('constants');
 
 let commandTmp = []
 let commands = []
@@ -47,10 +48,40 @@ client.once('ready', () => {
 })
 
 client.on('interactionCreate', async interaction => {
+    console.log(interaction)
     if (!interaction.isCommand()) return
     const { commandName } = interaction
     const selectedCommand = commands.find(c => commandName === c.name)
     selectedCommand.init(interaction, client)
+})
+
+client.on("messageCreate", async message => {
+    let urls = []
+    let matches = message.content.match(/(?:http|https):\/\/(?:(?:[\w_-]+\.)*tiktok\.com)(?:[\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])?/g)
+    console.log(message)
+    if (matches != null && message.author.id != process.env.USER_ID) {
+        Promise.all(
+            matches.map(async link => {
+                let expandedURL = await fetch(link)
+                    .then(response => response.text())
+                    .then(page => {
+                        let redirectURLs = page.match(/(?<="canonical":").+?(?=")/g)
+                        if (redirectURLs == null) {
+                            return link
+                        } else {
+                            // TikTok stores the redirect URLs with characters unicode escaped, so we need to replace the unicode chars with their normalized ones
+                            // return redirectURLs[0].replaceAll(/\\u\w{4}/g, match => {JSON.parse(`"${match}"`)})
+                            return JSON.parse(`"${redirectURLs[0]}"`)
+                        }
+                    })
+                expandedURL = expandedURL.split("?")[0]
+                urls.push(expandedURL)
+            })
+        )
+            .then(() => {
+                message.reply(`Here's your expanded URLs: ${urls.map(url => {return `\n<${url}>` })}`)
+            })
+    }
 })
 
 client.login(token)
